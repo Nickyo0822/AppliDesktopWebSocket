@@ -1,10 +1,11 @@
 <?php
-namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+namespace App\Models;
 
-class Salons extends Controller
+use Illuminate\Database\Eloquent\Model;
+
+class Salons extends Model
 {
-   
+    protected $fillable = ['name', 'image', 'user_id'];
 }
 ?>

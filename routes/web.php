@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\SalonsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,5 +31,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+
+Route::get('/salons', [SalonsController::class, 'index'])->name('salons.index');
+Route::get('/salons/create', [SalonsController::class, 'create'])->name('salons.create');
+Route::post('/salons', [SalonsController::class, 'store'])->name('salons.store');
+Route::put('/salons/{salon}', [SalonsController::class, 'update'])->name('salons.update');
 
 require __DIR__.'/auth.php';
