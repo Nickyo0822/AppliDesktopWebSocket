@@ -1,3 +1,8 @@
+@php
+    use App\Models\Messages;
+    $messages = Messages::get(); 
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +35,10 @@
 
     <!-- Chat -->
     <div class="messages">
-        @include('receive', ['message' => "heheboi"])
+        @foreach ($messages as $item)
+            @include('receive', ["message" => $item -> content])
+        @endforeach
+
     </div>
     <!-- End Chat -->
 
@@ -50,25 +58,23 @@
     const pusher  = new Pusher('{{config('broadcasting.connections.pusher.key')}}', {cluster: 'eu'});
     const channel = pusher.subscribe('public');
 
-    //Receive messages
     channel.bind('chat', function (data) {
         $.post("/receive", {
             _token:  '{{csrf_token()}}',
             message: data.message,
         })
         .done(function (res) {
-            $(".messages > .message").last().after(res);
+            $(".messages > .message");
+            $(".messages").append(res);
             $(document).scrollTop($(document).height());
         });
     });
 
-    //Broadcast messages
     $("form").submit(function (event) {
         event.preventDefault();
-
         $.ajax({
-            url:     "/broadcast",
-            method:  'POST',
+            url: "/broadcast",
+            method: 'POST',
             headers: {
                 'X-Socket-Id': pusher.connection.socket_id
             },
@@ -80,7 +86,9 @@
             $(".messages > .message").last().after(res);
             $("form #message").val('');
             $(document).scrollTop($(document).height());
+
         });
     });
+
 </script>
 </html>
