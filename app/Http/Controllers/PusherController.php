@@ -26,10 +26,10 @@ class PusherController extends Controller
             $pp[0]->profilepic = 'nopp.png';
         }
 
-        broadcast(new PusherBroadcast($request->get(key:'message')))->toOthers();
-        self::storeMessage( $request->input('message'));
+        broadcast(new PusherBroadcast($request-> message . '|userId='.Auth::id()))->toOthers();
+        self::storeMessage( $request->message);
       
-        return view('broadcast', ['message' => $request->get('message'), 'pp' => $pp]);
+        return view('broadcast', ['message' => $request->message, 'pp' => $pp]);
     }
 
     public function receive(Request $request)
