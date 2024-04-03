@@ -1,8 +1,6 @@
-@php
-    use App\Models\Messages;
-@endphp
-
 <div class="left message">
-    <img src="https://assets.edlin.app/images/rossedlin/03/rossedlin-03-100.jpg" alt="Avatar">
+    @if (isset($pp_user))
+    <img src="{{ $pp_user }}" alt="Avatar">
+    @endif
     <p>{{ $message }}</p>
 </div>

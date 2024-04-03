@@ -68,14 +68,15 @@ class ProfileController extends Controller
         ]);
 
         $imageName = '';
+
         if ($image = $request->file('image')){
             $imageName = time().'-'.uniqid().'.'.$image->getClientOriginalExtension();
-            $image->move('images/uploads', $imageName);
+            $image->move('images/profilepic', $imageName);
         }
 
         DB::table('users')
             ->where('id', '=', Auth::id())
-            ->update(['profilepic' =>$imageName]);
+            ->update(['profilepic' => '/images/profilepic/' . $imageName]);
 
         return redirect()->back();
     }

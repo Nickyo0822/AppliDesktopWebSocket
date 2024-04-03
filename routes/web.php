@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get(uri:'/', action: 'App\Http\Controllers\PusherController@index')->name('sendmsg');
     Route::post(uri:'/broadcast', action: 'App\Http\Controllers\PusherController@broadcast');
+    Route::get(uri:'/receive', action: 'App\Http\Controllers\PusherController@receive')->name('receive');
     Route::post(uri:'/receive', action: 'App\Http\Controllers\PusherController@receive');
 });
 
