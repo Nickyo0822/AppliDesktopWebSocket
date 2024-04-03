@@ -14,18 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+// Partie message
+Route::middleware('auth')->group(function () {
+    Route::get(uri:'/', action: 'App\Http\Controllers\PusherController@index');
+    Route::post(uri:'/broadcast', action: 'App\Http\Controllers\PusherController@broadcast');
+    Route::post(uri:'/receive', action: 'App\Http\Controllers\PusherController@receive');
+});
 
-Route::get(uri:'/', action: 'App\Http\Controllers\PusherController@index')->middleware('auth');
-Route::post(uri:'/broadcast', action: 'App\Http\Controllers\PusherController@broadcast');
-Route::post(uri:'/receive', action: 'App\Http\Controllers\PusherController@receive');
-
+// Changement inc
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Partie profil
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
