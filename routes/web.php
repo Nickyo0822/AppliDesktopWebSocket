@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 // Partie message
 Route::middleware('auth')->group(function () {
-    Route::get(uri:'/', action: 'App\Http\Controllers\PusherController@index');
+    Route::get(uri:'/', action: 'App\Http\Controllers\PusherController@index')->name('sendmsg');
     Route::post(uri:'/broadcast', action: 'App\Http\Controllers\PusherController@broadcast');
     Route::post(uri:'/receive', action: 'App\Http\Controllers\PusherController@receive');
 });
@@ -34,7 +34,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
+Route::post('profile', [ProfileController::class, 'picture'])->name('profile.picture');
 
 require __DIR__.'/auth.php';
