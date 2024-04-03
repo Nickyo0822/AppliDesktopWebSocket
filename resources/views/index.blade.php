@@ -4,83 +4,93 @@
     <title>Chat Laravel Pusher | Edlin App</title>
     <link rel="icon" href="https://assets.edlin.app/favicon/favicon.ico"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <!-- JavaScript -->
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <!-- End JavaScript -->
-
-    <!-- CSS -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
     <!-- End CSS -->
-
 </head>
 <body>
-    <div class="chat">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Menu Vertical -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                Salon 1
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Salon 2
+                            </a>
+                        </li>
+                        <!-- Bouton pour ouvrir la modale -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajouterSalonModal">
+                            Ajouter un Salon
+                        </button>
+  
+                    </ul>
+                </div>
+            </div>
 
-    <!-- Header -->
-    {{-- <div class="top">
-        <img src="https://assets.edlin.app/images/rossedlin/03/rossedlin-03-100.jpg" alt="Avatar">
-        <div>
-        <p>Ross Edlin</p>
-        <small>Online</small>
+            <!-- Contenu Principal -->
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                <div class="chat">
+                    <!-- Header supprimé pour l'exemple -->
+                    <!-- Chat -->
+                    <div class="messages">
+                        @include('receive', ['message' => "heheboi"])
+                    </div>
+                    <!-- Footer -->
+                    <div class="bottom">
+                        <form>
+                            <input type="text" id="message" name="message" placeholder="Enter message..." autocomplete="off">
+                            <button type="submit"></button>
+                        </form>
+                    </div>
+                </div>
+            </main>
         </div>
-    </div> --}}
-    <!-- End Header -->
-
-    <!-- Chat -->
-    <div class="messages">
-        @include('receive', ['message' => "heheboi"])
     </div>
-    <!-- End Chat -->
 
-    <!-- Footer -->
-    <div class="bottom">
-        <form>
-        <input type="text" id="message" name="message" placeholder="Enter message..." autocomplete="off">
-        <button type="submit"></button>
+
+    <!-- Modale Ajouter un Salon -->
+<div class="modal fade" id="ajouterSalonModal" tabindex="-1" aria-labelledby="ajouterSalonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ajouterSalonModalLabel">Ajouter un Salon</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/path/to/your/route" method="POST" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="salon-name">Nom du Salon</label>
+              <input type="text" class="form-control" id="salon-name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="salon-image">Image du Salon</label>
+              <input type="file" class="form-control-file" id="salon-image" name="image">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+          </div>
         </form>
+      </div>
     </div>
-    <!-- End Footer -->
-
-    </div>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
-
-<script>
-    const pusher  = new Pusher('{{config('broadcasting.connections.pusher.key')}}', {cluster: 'eu'});
-    const channel = pusher.subscribe('public');
-
-    //Receive messages
-    channel.bind('chat', function (data) {
-        $.post("/receive", {
-            _token:  '{{csrf_token()}}',
-            message: data.message,
-        })
-        .done(function (res) {
-            $(".messages > .message").last().after(res);
-            $(document).scrollTop($(document).height());
-        });
-    });
-
-    //Broadcast messages
-    $("form").submit(function (event) {
-        event.preventDefault();
-
-        $.ajax({
-            url:     "/broadcast",
-            method:  'POST',
-            headers: {
-                'X-Socket-Id': pusher.connection.socket_id
-            },
-            data:    {
-                _token:  '{{csrf_token()}}',
-                message: $("form #message").val(),
-            }
-        }).done(function (res) {
-            $(".messages > .message").last().after(res);
-            $("form #message").val('');
-            $(document).scrollTop($(document).height());
-        });
-    });
-</script>
 </html>
