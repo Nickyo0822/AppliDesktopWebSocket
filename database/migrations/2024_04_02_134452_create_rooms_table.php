@@ -22,6 +22,9 @@ return new class extends Migration
             $table->foreignIdFor(Rooms::class)->constrained()->cascadeOnDelete();
         });
 
+        Rooms::create([
+            'name' => 'roomtest'
+        ]);
     }
 
     /**

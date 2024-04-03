@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PictureRequest;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -56,5 +59,25 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function picture(PictureRequest $request)
+    {
+        $request->validate([
+            'image'=>'required|mimes:jpg,jpeg,png,bmp',
+        ]);
+
+        $imageName = '';
+
+        if ($image = $request->file('image')){
+            $imageName = time().'-'.uniqid().'.'.$image->getClientOriginalExtension();
+            $image->move('images/profilepic', $imageName);
+        }
+
+        DB::table('users')
+            ->where('id', '=', Auth::id())
+            ->update(['profilepic' => '/images/profilepic/' . $imageName]);
+
+        return redirect()->back();
     }
 }

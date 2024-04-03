@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SalonsController;
 /*
@@ -14,29 +15,26 @@ use App\Http\Controllers\SalonsController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+// Partie message
+Route::middleware('auth')->group(function () {
+    Route::get(uri:'/', action: 'App\Http\Controllers\PusherController@index')->name('sendmsg');
+    Route::post(uri:'/broadcast', action: 'App\Http\Controllers\PusherController@broadcast');
+    Route::get(uri:'/receive', action: 'App\Http\Controllers\PusherController@receive')->name('receive');
+    Route::post(uri:'/receive', action: 'App\Http\Controllers\PusherController@receive');
+});
 
-Route::get(uri:'/', action: 'App\Http\Controllers\PusherController@index')->middleware('auth');
-Route::post(uri:'/broadcast', action: 'App\Http\Controllers\PusherController@broadcast');
-Route::post(uri:'/receive', action: 'App\Http\Controllers\PusherController@receive');
-
+// Changement inc
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Partie profil
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
-Route::get('/salons', [SalonsController::class, 'index'])->name('salons.index');
-Route::get('/salons/create', [SalonsController::class, 'create'])->name('salons.create');
-Route::post('/salons', [SalonsController::class, 'store'])->name('salons.store');
-Route::put('/salons/{salon}', [SalonsController::class, 'update'])->name('salons.update');
+Route::post('profile', [ProfileController::class, 'picture'])->name('profile.picture');
 
 require __DIR__.'/auth.php';
