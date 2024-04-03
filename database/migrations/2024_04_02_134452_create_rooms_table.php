@@ -13,12 +13,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->string('content');
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->timestamps();
+            $table->string("name");
         });
+
+        Schema::table('messages', function (Blueprint $table) {
+            $table->foreignIdFor(Rooms::class)->constrained()->cascadeOnDelete();
+        });
+
     }
 
     /**
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('rooms');
     }
 };

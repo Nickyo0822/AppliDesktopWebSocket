@@ -41,4 +41,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    use HasApiTokens, HasFactory, Notifiable;
+
+    public function rooms()
+    {
+        return $this->belongsToMany(Rooms::class);
+    }
 }
