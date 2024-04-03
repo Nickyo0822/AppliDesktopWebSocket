@@ -20,6 +20,10 @@ class PusherController extends Controller
             ->where('id', '=', Auth::id())
             ->get();
 
+        if (!$pp[0]->profilepic) {
+            $pp[0]->profilepic = 'nopp.png';
+        }
+
         broadcast(new PusherBroadcast($request->get(key:'message')))->toOthers();
         
         return view('broadcast', ['message' => $request->get('message'), 'pp' => $pp]);
